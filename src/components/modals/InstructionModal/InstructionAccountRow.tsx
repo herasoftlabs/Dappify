@@ -17,7 +17,7 @@ interface InstructionAccountRowProps {
   account: InstructionAccount;
   onDelete: () => void;
   onToggleDropdown: (id: number) => void;
-  availableVariables: AvailableVariable[]; // Context'ten gelen Struct değişkenleri listesi
+  availableVariables: AvailableVariable[]; 
   onVariableSelect: (id: number, variableName: string) => void;
   isParameter: boolean;
 }
@@ -30,7 +30,7 @@ const InstructionAccountRow: React.FC<InstructionAccountRowProps> = ({
   onVariableSelect, 
   isParameter 
 }) => {
-  // Değişkenleri konsola yazdırarak kontrol edelim
+
   console.log(`Available Variables for account '${account.accountName}':`, availableVariables);
 
   return (

@@ -29,7 +29,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
 }) => {
   return (
     <div>
-      {/* Context Name */}
+    
       <div className="my-5">
         <label className="block mb-1 font-medium">Context Name:</label>
         <input
@@ -41,7 +41,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
         />
       </div>
       
-      {/* Instruction Name */}
+     
       <div className="my-5">
         <label className="block mb-1 font-medium">Instruction Name:</label>
         <input
@@ -53,7 +53,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
         />
       </div>
 
-      {/* Visibility Controls */}
+    
       <div className="my-5">
         <label className="block mb-1 font-medium">Visibility:</label>
         <div className="flex items-center gap-4">
@@ -68,7 +68,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
         </div>
       </div>
 
-      {/* Return Type */}
+    
       <div className="my-5">
         <label className="block mb-1 font-medium">Return Type:</label>
         <select

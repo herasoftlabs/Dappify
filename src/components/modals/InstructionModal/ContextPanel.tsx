@@ -14,7 +14,7 @@ interface Field {
 interface ContextPanelProps {
   contextFields: Field[];
   setContextFields: (fields: Field[]) => void;
-  generateContextCode: () => void; // Rust kodu oluşturmak için bir fonksiyon
+  generateContextCode: () => void; 
 }
 
 const ContextPanel: React.FC<ContextPanelProps> = ({ contextFields, setContextFields, generateContextCode }) => {
@@ -23,7 +23,7 @@ const ContextPanel: React.FC<ContextPanelProps> = ({ contextFields, setContextFi
       ...contextFields,
       { id: Date.now(), type: "Account", name: "", accountName: "", isMutable: false, isPublic: true, fields: [] },
     ]);
-    generateContextCode(); // Yeni alan eklendiğinde Rust kodunu güncelle
+    generateContextCode(); 
   };
 
   const handleFieldChange = (id: number, key: keyof Field, value: string | boolean | { name: string; type: string }[]) => {
@@ -32,7 +32,7 @@ const ContextPanel: React.FC<ContextPanelProps> = ({ contextFields, setContextFi
         field.id === id ? { ...field, [key]: value } : field
       )
     );
-    generateContextCode(); // Alan değiştirildiğinde Rust kodunu güncelle
+    generateContextCode(); 
   };
 
   return (
@@ -47,7 +47,7 @@ const ContextPanel: React.FC<ContextPanelProps> = ({ contextFields, setContextFi
             field={field}
             onDelete={() => {
               setContextFields(contextFields.filter((f) => f.id !== field.id));
-              generateContextCode(); // Alan silindiğinde Rust kodunu güncelle
+              generateContextCode(); 
             }}
             onFieldChange={handleFieldChange}
           />

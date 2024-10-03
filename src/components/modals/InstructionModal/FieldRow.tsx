@@ -30,7 +30,7 @@ const FieldRow: React.FC<FieldRowProps> = ({ field, onDelete, onFieldChange }) =
     const selectedAccountName = e.target.value;
     onFieldChange(field.id, "accountName", selectedAccountName);
 
-    // Eğer kullanıcı FakeData'yı seçerse fields'ı ekleyelim
+   
     if (selectedAccountName === fakeData.structName) {
       onFieldChange(field.id, "fields", fakeData.fields);
     } else {
