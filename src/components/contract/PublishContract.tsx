@@ -4,7 +4,7 @@ import Button from '@/components/common/Button';
 
 const PrepareOnePage: React.FC = () => {
   const handlePreparePage = () => {
-    // Kullanıcının deploy ettiği contract ile etkileşime geçecek bir sayfa hazırlama işlemi
+    
     console.log('Preparing one-page site for deployed contract');
   };
 

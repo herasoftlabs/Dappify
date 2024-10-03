@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import Card from '@/components/common/Card';
-import { ContractContext } from '@/context/ContractContext';
 import Button from '@/components/common/Button';
 
 const DeployContract: React.FC = () => {
@@ -11,7 +10,7 @@ const DeployContract: React.FC = () => {
     setIsDeploying(true);
     try {
      
-      // Simulate deployment delay
+     
       await new Promise((resolve) => setTimeout(resolve, 2000));
       alert('Contract deployed successfully!');
     } catch (error) {

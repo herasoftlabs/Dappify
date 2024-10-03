@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import Card from '@/components/common/Card';
-import { ContractContext } from '@/context/ContractContext';
+
 
 const TestContract: React.FC = () => {
  /*  const { contract } = useContext(ContractContext); */
 
   const handleRunTest = () => {
-    // Contract test etme işlemi
+   
 /*     console.log(`Testing contract: ${contract?.name}`); */
   };
 

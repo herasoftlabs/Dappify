@@ -1,62 +1,54 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import useProject from "@/hooks/useProject";
+import { anchorTemplates } from "@/templates/anchorTemplates";
+import { projectCategories } from "@/data/templatesData"; 
 
-// Proje verileri
-const projectCategories = [
-  {
-    category: "Basic",
-    hint: "Basic projects are simple projects that are easy to understand and implement.",
-    projects: [
-      { id: "blank-anchor", name: "Blank Anchor Project", isComingSoon: false },
-      { id: "cross-anchor", name: "Cross Platform Project", isComingSoon: true },
-    ],
-  },
-  {
-    category: "Advanced Packages",
-    hint: "Advanced projects are complex projects that require a deep understanding of blockchain technology.",
-    projects: [
-      { id: "spl-token", name: "SPL Token Project", isComingSoon: false },
-      { id: "nft-project", name: "NFT Project", isComingSoon: true },
-      { id: "blink-project", name: "Blink Project", isComingSoon: true },
-    ],
-  },
-  {
-    category: "Sample Projects",
-    hint: "Sample projects are projects that are created to demonstrate the capabilities of the platform.",
-    projects: [
-      { id: "banking-dapp", name: "Banking dApp Template", isComingSoon: true },
-      { id: "staking-dapp", name: "Staking dApp Template", isComingSoon: true },
-      { id: "dao-dapp", name: "Basic DAO Template", isComingSoon: true },
-    ],
-  },
-];
+interface SelectTemplateProps {
+  setCurrentStep: (step: number) => void; 
+}
 
-const SelectTemplate = () => {
-  const router = useRouter();
+const SelectTemplate: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
+  const searchParams = useSearchParams();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const { projects, updateProjectContracts } = useProject(); 
 
-  
-  
+  const handleTemplateSelect = (projectId: string) => {
+    setSelectedTemplate(projectId);
+  };
 
-  
-  const gradients = [
-    "bg-gradient-to-r from-purple-400 to-pink-500",
-    "bg-gradient-to-r from-purple-400 to-pink-500",
-    "bg-gradient-to-r from-purple-400 to-pink-500",
-    "bg-gradient-to-r from-purple-400 to-pink-500",
-    "bg-gradient-to-r from-purple-400 to-pink-500",
-  ];
+  const handleSaveAndProceed = () => {
+    if (selectedTemplate) {
+     
+      const newContract = {
+        name: "lib.rs",
+        code: selectedTemplate === "blank-anchor"
+          ? JSON.parse(anchorTemplates.blankAnchorJson)
+          : selectedTemplate === "spl-token"
+          ? JSON.parse(anchorTemplates.splTokenJson)
+          : {},
+      };
+
+      
+
+      const projectIdFromUrl = searchParams.get('id');
+      if (projectIdFromUrl) {
+        updateProjectContracts(projectIdFromUrl, [newContract]);
+        console.log("Updated Contracts:", newContract);
+        setCurrentStep(1); 
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center p-8">
       <h1 className="text-3xl font-semibold mb-6">Select a Template for your Solana dApp</h1>
    
-      {/* Card yapısı */}
+     
       <div className="w-full max-w-5xl bg-white p-10 rounded-lg shadow-lg">
         {projectCategories.map((category, index) => (
           <div key={index} className="mb-6 text-left">
-            {/* Kategori başlığı */}
             <h2 className="text-xl font-bold">{category.category}</h2>
             <small className="text-xl font-thin">{category.hint}</small>
             <div className="flex flex-wrap gap-4 mt-5">
@@ -66,13 +58,12 @@ const SelectTemplate = () => {
                   className={`relative cursor-pointer w-[200px] p-4 rounded-md text-white text-center font-medium ${
                     selectedTemplate === project.id
                       ? "bg-[#212f48]" 
-                      : gradients[projectIndex % gradients.length]
+                      : "bg-gradient-to-r from-purple-400 to-pink-500"
                   } ${project.isComingSoon ? "pointer-events-none opacity-60" : ""}`}
-                  onClick={() => !project.isComingSoon && setSelectedTemplate(project.id)} 
+                  onClick={() => !project.isComingSoon && handleTemplateSelect(project.id)}
                 >
                   {project.name}
 
-                  
                   {project.isComingSoon && (
                     <div className="absolute top-[-20px] right-[-10px] bg-red-500 text-white text-xs px-2 py-1 rounded-full shadow-md">
                       <small>Coming Soon</small>
@@ -84,8 +75,15 @@ const SelectTemplate = () => {
           </div>
         ))}
 
-        
-        
+        <div className="flex justify-end mt-8">
+          <button
+            className="bg-[#1a2434] text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-300"
+            onClick={handleSaveAndProceed}
+            disabled={!selectedTemplate}
+          >
+            Save and Proceed
+          </button>
+        </div>
       </div>
     </div>
   );

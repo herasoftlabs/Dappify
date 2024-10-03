@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import * as monaco from "monaco-editor";
 
-// Monaco Editor bileşenini dinamik olarak yüklüyoruz (ssr: false)
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
 interface CodeEditorProps {
@@ -15,31 +14,35 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ code, onCodeChange }) => {
   const [editorCode, setEditorCode] = useState(code);
 
   useEffect(() => {
+    setEditorCode(code);
+  }, [code]);
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
-      // Anchor dilini tanıtalım
+      
       monaco.languages.register({ id: "anchor" });
 
-      // Anchor dilinin syntax highlighting tanımları (Rust temelli)
+      
       monaco.languages.setMonarchTokensProvider("anchor", {
         tokenizer: {
           root: [
-            [/#\[[^\]]*\]/, "annotation"], // #[derive(...)] gibi annotation'lar
-            [/fn|let|struct|enum|pub|mod|impl/, "keyword"], // Rust ve Anchor keyword'leri
-            [/msg!|program_id|accounts|declare_id!/, "function"], // Anchor'a özgü makrolar
-            [/\bSigner|Context|ProgramResult|Account\b/, "type.identifier"], // Anchor'da kullanılan bazı türler
-            [/[A-Z][\w$]*/, "type.identifier"], // Tip isimleri
+            [/#\[[^\]]*\]/, "annotation"], // #[derive(...)] annotations
+            [/fn|let|struct|enum|pub|mod|impl/, "keyword"], // Rust and Anchor keywords
+            [/msg!|program_id|accounts|declare_id!/, "function"], // Macro of Anchor's
+            [/\bSigner|Context|ProgramResult|Account\b/, "type.identifier"], // Some types on Anchor
+            [/[A-Z][\w$]*/, "type.identifier"], // Type names
             [/[{}]/, "delimiter.bracket"],
-            [/"[^"]*"/, "string"], // Stringler
-            [/[a-z_$][\w$]*/, "identifier"], // Diğer kelimeler
+            [/"[^"]*"/, "string"], // Strings
+            [/[a-z_$][\w$]*/, "identifier"], // Another keywords
             [/[()\[\]]/, "@brackets"],
-            [/[0-9]+/, "number"], // Sayılar
-            [/\/\/.*$/, "comment"], // Tek satır yorumlar
-            [/\/\*[\s\S]*?\*\//, "comment"], // Çok satırlı yorumlar
+            [/[0-9]+/, "number"], // Numbers
+            [/\/\/.*$/, "comment"], // Single line comments
+            [/\/\*[\s\S]*?\*\//, "comment"], // Multi lines comments
           ],
         },
       });
 
-      // Autocomplete ve diğer gelişmiş işlevler için öneri sağlayıcı
+      
       monaco.languages.registerCompletionItemProvider("anchor", {
         provideCompletionItems: (model, position) => {
           const word = model.getWordUntilPosition(position);
@@ -106,7 +109,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ code, onCodeChange }) => {
         },
       });
 
-      // Rust/Anchor için error linting basit örneği (geliştirilebilir)
+      
       monaco.languages.registerDocumentFormattingEditProvider("anchor", {
         provideDocumentFormattingEdits: (model, options, token) => {
           const code = model.getValue();
@@ -131,21 +134,21 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ code, onCodeChange }) => {
     <div className="w-[800px] h-[600px]">
       <MonacoEditor
         height="600px"
-        defaultLanguage="rust" // Anchor dilini aktif ediyoruz
+        defaultLanguage="rust"
         value={editorCode}
-        theme="vs-dark" // Karanlık tema
+        theme="vs-dark"
         onChange={handleEditorChange}
         options={{
           fontSize: 14,
-          minimap: { enabled: true }, // Minimap'ı etkinleştiriyoruz
+          minimap: { enabled: true },
           scrollBeyondLastLine: true,
-          automaticLayout: true, // Otomatik layout ayarı
-          wordWrap: "on", // Satır kaydırma
-          formatOnType: true, // Yazarken formatlama
-          quickSuggestions: true, // Autocomplete
-          suggestOnTriggerCharacters: true, // Tamamlama tetikleyicileri
-          folding: true, // Kod katlama
-          acceptSuggestionOnEnter: "on", // Enter ile otomatik tamamlama
+          automaticLayout: true,
+          wordWrap: "on",
+          formatOnType: true,
+          quickSuggestions: true,
+          suggestOnTriggerCharacters: true,
+          folding: true,
+          acceptSuggestionOnEnter: "on",
         }}
       />
     </div>
