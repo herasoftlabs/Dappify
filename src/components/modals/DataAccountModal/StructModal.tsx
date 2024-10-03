@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-// Modal tipi
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -14,7 +14,7 @@ interface Field {
   payer: string;
   space: string;
   extraParam: string;
-  seeds: string; // Yeni eklenen prop
+  seeds: string; 
   isMutable: boolean;
   isPublic: boolean;
 }
@@ -60,7 +60,7 @@ const StructModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [visibility, setVisibility] = useState<"public" | "private">("public");
   const [isPDA, setIsPDA] = useState<boolean>(false);
 
-  // Add a new field to the struct
+ 
   const addField = (type: string) => {
     const selectedVariable = variableTypes.find((v) => v.value === type);
     const defaultSubtype = selectedVariable?.subtypes[0] || type;
@@ -74,7 +74,7 @@ const StructModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         name: type === "Program" ? "system_program" : "",
         payer: "signer",
         space: "8 + 1 + 8 + 8",
-        seeds: "user", // Varsayılan değer "user" olarak ayarlandı
+        seeds: "user", 
         extraParam: "",
         isMutable: false,
         isPublic: true,
@@ -83,7 +83,7 @@ const StructModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     setNextFieldId((prevId) => prevId + 1);
   };
 
-  // Handle changes in field name, type, and attributes
+
   const handleFieldChange = (
     id: number,
     key: keyof Field,
@@ -96,12 +96,12 @@ const StructModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     );
   };
 
-  // Remove a field from the struct
+ 
   const removeField = (id: number) => {
     setFields((prevFields) => prevFields.filter((field) => field.id !== id));
   };
 
-  // Toggle derives for the struct
+
   const handleDeriveSelection = (derive: string) => {
     setDeriveSelections((prevSelections) =>
       prevSelections.includes(derive)
@@ -110,13 +110,13 @@ const StructModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     );
   };
 
-  // Clear all fields in the struct
+
   const clearFields = () => {
     setFields([]);
     setNextFieldId(1);
   };
 
-  // Generate the Rust/Anchor code based on current inputs
+  
   const generateAnchorCode = () => {
     const fieldDeclarations = fields
       .map((field) => {
@@ -170,13 +170,13 @@ ${visibilityCode} struct ${structName}${lifetime} {
 
   if (!isOpen) return null;
 
-  // Render content based on active tab
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "settings":
         return (
           <div>
-            {/* Struct Settings Fields */}
+           
             <div className="my-5">
               <label className="block mb-1 font-medium">Struct Name:</label>
               <input
@@ -274,12 +274,12 @@ ${visibilityCode} struct ${structName}${lifetime} {
               <small className="text-gray-500">Add fields to your struct by selecting the desired type.</small>
             </div>
 
-            {/* Added Fields */}
+         
             <div className="max-h-[250px] overflow-y-auto pb-1 pr-1">
               {fields.map((field) => (
                 <div key={field.id} className="mb-4 border-b pb-2">
                   <div className="flex items-center gap-4">
-                    {/* Only show dropdown if subtypes are available */}
+                   
                     {variableTypes.find((v) => v.value === field.type)?.subtypes.length ? (
                       <select
                         value={field.subtype}
@@ -300,7 +300,7 @@ ${visibilityCode} struct ${structName}${lifetime} {
                       <span className="mr-4">{field.type}</span>
                     )}
 
-                    {/* Field Name Input */}
+                  
                     {field.type !== "AccountMacro" && (
                       <input
                         type="text"
@@ -313,7 +313,7 @@ ${visibilityCode} struct ${structName}${lifetime} {
                       />
                     )}
 
-                    {/* For Account Type: Extra Parameter */}
+                  
                     {field.type === "Account" && (
                       <div className="flex items-center gap-2 w-full">
                         <input
@@ -338,7 +338,7 @@ ${visibilityCode} struct ${structName}${lifetime} {
                       </div>
                     )}
 
-                    {/* For Signer Type: Mutable Checkbox */}
+                
                     {field.type === "Signer" && (
                       <label className="flex items-center gap-2 ml-2">
                         <input
@@ -352,7 +352,7 @@ ${visibilityCode} struct ${structName}${lifetime} {
                       </label>
                     )}
 
-                    {/* Visibility Checkbox for Primitive Types */}
+                 
                     {["String", "bool", "u", "i", "Pubkey"].includes(field.type) && (
                       <label className="flex items-center gap-2 ml-4">
                         <input
@@ -366,7 +366,7 @@ ${visibilityCode} struct ${structName}${lifetime} {
                       </label>
                     )}
 
-                    {/* Attribute Macro Type */}
+                
                     {field.type === "AccountMacro" && (
                       <div className="flex items-center gap-2">
                         <input
@@ -403,7 +403,7 @@ ${visibilityCode} struct ${structName}${lifetime} {
                       </div>
                     )}
 
-                    {/* Delete Button */}
+                   
                     <button
                       onClick={() => removeField(field.id)}
                       className="ml-4 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700"
@@ -433,7 +433,7 @@ ${visibilityCode} struct ${structName}${lifetime} {
             </button>
           </div>
 
-          {/* Tab Navigation */}
+         
           <div className="mb-4 border-b">
             {["settings", "fields"].map((tab) => (
               <button
@@ -448,22 +448,22 @@ ${visibilityCode} struct ${structName}${lifetime} {
             ))}
           </div>
 
-          {/* Tab Content */}
+         
           {renderTabContent()}
         </div>
 
-        {/* Preview Code Section */}
+       
         <div className="w-1/3 bg-gray-100 p-6 rounded-r-lg flex flex-col justify-between">
           <h3 className="text-lg font-semibold mb-2">Preview Struct Code</h3>
 
-          {/* Code Preview with Scroll */}
+         
           <div className="flex-1 overflow-y-auto max-h-[500px]">
             <div className="bg-gray-200 px-4 py-0 rounded shadow-inner text-sm border border-gray-300 h-auto">
               <pre className="whitespace-pre-wrap text-[10px]">{generateAnchorCode()}</pre>
             </div>
           </div>
 
-          {/* Save and Clear Buttons */}
+        
           <div className="mt-4 flex justify-between gap-5">
             <button
               className="bg-[#da462c] text-white w-full px-4 py-2 rounded hover:bg-blue-700"
