@@ -9,19 +9,19 @@ import InstructionModal from '@/components/modals/InstructionModal/InstructionMo
 
 
 const Sidebar: React.FC = () => {
-  // Menülerin açılıp kapanması için state yönetimi
+  
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>(() =>
     menuData.reduce((acc, item) => {
-      acc[item.id] = true; // Başlangıçta tüm menüleri açık yapıyoruz
+      acc[item.id] = true; 
       return acc;
     }, {} as { [key: string]: boolean })
   );
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Menü başlangıçta gizli olacak
-  const [modalOpen, setModalOpen] = useState(false); // Modalın açık olup olmadığını kontrol eder
-  const [selectedRoute, setSelectedRoute] = useState<string | null>(null); // Hangi modalın açılacağını belirler
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
+  const [modalOpen, setModalOpen] = useState(false); 
+  const [selectedRoute, setSelectedRoute] = useState<string | null>(null); 
 
-  // Menü başlıklarına tıklandığında açılıp kapanmayı kontrol eden fonksiyon
+
   const toggleMenu = (menuId: string) => {
     setOpenMenus((prev) => ({
       ...prev,
@@ -29,18 +29,18 @@ const Sidebar: React.FC = () => {
     }));
   };
 
-  // Menü açma/kapatma fonksiyonu
+ 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
   };
 
-  // Modal açma fonksiyonu
+  
   const openModalWithRoute = (route: string) => {
     setSelectedRoute(route);
     setModalOpen(true);
   };
 
-  // Modal kapatma fonksiyonu
+
   const closeModal = () => {
     setSelectedRoute(null);
     setModalOpen(false);
@@ -48,7 +48,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
-      {/* Menü Açma İkonu */}
+      
       <div
         className="fixed left-4 top-20 z-50 p-2 bg-blue-600 text-primary rounded-full cursor-pointer"
         onClick={toggleSidebar}
@@ -56,14 +56,14 @@ const Sidebar: React.FC = () => {
         {!isSidebarOpen ? <FaBars size={24} /> : ""}
       </div>
 
-      {/* Sidebar Menü */}
+      
       <motion.div
         initial={{ x: '-100%' }}
         animate={{ x: isSidebarOpen ? 0 : '-100%' }}
         transition={{ duration: 0.5 }}
         className="w-[15rem] rounded-r-lg py-[2rem] px-[1rem] bg-primary shadow-lg text-white fixed left-0 top-[7rem] overflow-y-auto custom-scrollbar z-40"
       >
-        {/* Menü Başlığı */}
+     
         <div className="bg-blue-600 text-white py-3 px-4 rounded-lg text-xl font-bold mb-6 flex justify-between items-center">
           <span>Menü</span>
           <button
@@ -74,7 +74,7 @@ const Sidebar: React.FC = () => {
           </button>
         </div>
 
-        {/* Menü Öğeleri */}
+
         {menuData.map((menuItem) => (
           <div key={menuItem.id} className="mb-6">
             <div
@@ -89,7 +89,7 @@ const Sidebar: React.FC = () => {
               {menuItem.name}
             </div>
 
-            {/* Alt Menü Öğeleri */}
+           
             {openMenus[menuItem.id] && menuItem.subItems && (
               <ul className="ml-2 mt-4 space-y-1">
                 {menuItem.subItems.map((subItem) => (
@@ -109,7 +109,7 @@ const Sidebar: React.FC = () => {
         ))}
       </motion.div>
 
-      {/* Modallar */}
+     
       {selectedRoute === "instruction" && (
         <InstructionModal isOpen={modalOpen} onClose={closeModal} > 
          
