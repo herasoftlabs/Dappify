@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from 'react';
 import { FaRobot, FaTimes, FaBars } from 'react-icons/fa';
-import { motion } from 'framer-motion'; // Animasyon için framer-motion kullanıyoruz.
+import { motion } from 'framer-motion'; 
 
 const RightAssistant: React.FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false); // Asistan başlangıçta gizli olacak
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  // Asistan açma/kapatma fonksiyonu
+ 
   const toggleAssistant = () => {
     setIsOpen((prev) => !prev);
   };
@@ -28,14 +28,14 @@ const RightAssistant: React.FC = () => {
         {!isOpen ? <FaBars size={24} /> : ""}
       </div>
 
-      {/* Sağ asistan */}
+     
       <motion.div
         initial={{ x: '100%' }}
         animate={{ x: isOpen ? 0 : '100%' }}
         transition={{ duration: 0.5 }}
         className="w-[20rem] rounded-l-lg py-[2rem] px-[1rem] bg-primary shadow-lg text-black fixed right-0 top-[7rem] h-[calc(100vh-7rem)] overflow-y-auto custom-scrollbar z-40"
       >
-        {/* Üst bölüm */}
+        
         <div className="bg-blue-600 text-white  px-4 rounded-lg text-xl font-bold mb-6 flex justify-between items-center">
           <span><u>GPT Assistant</u></span>
 
@@ -47,7 +47,7 @@ const RightAssistant: React.FC = () => {
           </button>
         </div>
 
-        {/* İçerik */}
+      
         <div className="flex-1 overflow-y-auto text-primary bg-gray-200 p-7 rounded shadow-inner text-sm border border-gray-300 max-h-[500px]">
           
           <ul className="space-y-3 text-sm">
