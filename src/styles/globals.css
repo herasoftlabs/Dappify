@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+  /* main */
+  .main-container-dark {
+    @apply flex min-h-screen flex-1 flex-col items-center bg-[#212f48] px-6 pb-10 pt-28 max-md:pb-32 sm:px-10;
+  }
+
+  .main-container-light {
+    @apply flex min-h-screen flex-1 flex-col items-center bg-[#f8f8fb] px-6 pb-10 pt-28 max-md:pb-32 sm:px-10;
+  }
+
+  /* Head Text */
+  .head-text {
+    @apply text-heading2-bold text-[#212f48];
+  }
+  .head-text-light {
+    @apply text-heading2-bold text-dark-2;
+  }
+
+  /* Activity */
+  .activity-card {
+    @apply flex items-center gap-3 rounded-md px-7 py-4;
+  }
+
+  /* No Result */
+  .no-result {
+    @apply text-center !text-base-regular text-light-3;
+  }
+
+  /* Community Card */
+  .community-card {
+    @apply w-full rounded-lg bg-dark-3 px-4 py-5 sm:w-96;
+  }
+
+  .community-card_btn {
+    @apply rounded-lg bg-primary-500 px-5 py-1.5 text-small-regular !text-light-1 !important;
+  }
+
+  /* thread card  */
+  .thread-card_bar {
+    @apply relative mt-3 mb-7 w-0.5 grow rounded-full bg-[#eaeaf5];
+  }
+
+  /* User card */
+  .user-card {
+    @apply flex flex-col justify-between gap-4 max-xs:rounded-xl max-xs:bg-dark-3 max-xs:p-4 xs:flex-row xs:items-center;
+  }
+
+  .user-card_avatar {
+    @apply flex flex-1 items-start justify-start gap-3 xs:items-center;
+  }
+
+  .user-card_btn {
+    @apply h-auto min-w-[74px] rounded-lg bg-primary-500 text-[12px] text-light-1 !important;
+  }
+
+  .searchbar {
+    @apply flex gap-1 rounded-lg px-4 py-0.5 bg-[#1a2434] text-[#fff] w-[500px];
+  }
+
+  .searchbar_input {
+    @apply border-none bg-transparent text-base-regular text-white outline-none !important;
+  }
+
+  .topbar {
+    @apply z-30 flex w-full items-center justify-between bg-primary px-6 py-5 transition-all ease-in-out duration-100 shadow-lg;
+  }
+
+  .bottombar {
+    @apply fixed bottom-0 z-10 w-full shadow-lg bg-white p-4 backdrop-blur-lg xs:px-7 md:hidden;
+  }
+
+  .bottombar_container {
+    @apply flex items-center justify-between gap-3 xs:gap-5;
+  }
+
+  .bottombar_link {
+    @apply relative flex flex-col items-center gap-2 rounded-lg p-2 sm:flex-1 sm:px-2 sm:py-2.5;
+  }
+
+  .leftsidebar {
+    @apply sticky left-0 top-10 z-20 flex h-screen w-fit  flex-col justify-between overflow-auto transition-all ease-in-out duration-100 shadow-lg bg-white pb-5 pt-10 max-md:hidden;
+  }
+
+  .leftsidebar_link {
+    @apply relative flex justify-start gap-1 rounded-lg p-4 hover:bg-[#212f48]  active:text-[#fff];
+  }
+
+  .pagination {
+    @apply mt-10 flex w-full items-center justify-center gap-5;
+  }
+
+  .rightsidebar {
+    @apply sticky w-[300px] h-screen right-0 top-10 z-10 flex flex-col justify-between gap-6 overflow-auto border border-l-white bg-light-1 px-5 pb-5 pt-28 max-md:hidden;
+  }
+}
+
+@layer utilities {
+  .css-invert {
+    @apply invert-[50%] brightness-200;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 0px;
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #252424;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #88889739;
+    border-radius: 50px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #7878a3;
+  }
+}

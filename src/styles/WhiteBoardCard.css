@@ -1,0 +1,41 @@
+.whiteboard-container {
+    perspective: 1000px;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+  
+ 
+  }
+  
+  .whiteboard-card {
+    width: 800px;
+    height: 500px;
+    position: relative;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+  
+  .flipped {
+    transform: rotateY(180deg);
+  }
+  
+  .whiteboard-front,
+  .whiteboard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+  }
+  
+  .whiteboard-front {
+    
+    z-index: 2;
+  }
+  
+  .whiteboard-back {
+    
+    transform: rotateY(180deg);
+    z-index: 1;
+  }
+  
+ 
