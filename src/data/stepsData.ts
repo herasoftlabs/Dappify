@@ -1,5 +1,3 @@
-// Contract oluşturma sürecinin adımlarını tanımlar
-
 export interface Step {
     id: number;
     name: string;
