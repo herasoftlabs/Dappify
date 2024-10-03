@@ -7,7 +7,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
     <div className="flex">
       <Topbar />
       <Sidebar />
-      <main className="flex-grow ml-64 mt-20 p-6">
+      <main className="flex-grow  mt-20 p-6">
         {children}
       </main>
     </div>
