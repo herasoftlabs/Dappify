@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { headerMenu } from "@/data/menuData"; // Menü öğelerini dinamik olarak içe aktarıyoruz.
+import { headerMenu } from "@/data/menuData"; 
 import { useRouter } from "next/navigation";
 
 function Topbar() {
@@ -10,7 +10,7 @@ function Topbar() {
 
   return (
     <nav className="topbar flex items-center justify-between px-52 py-4 bg-primary-500 text-white">
-      {/* Logo */}
+     
       <Link href="/" className="flex items-center gap-4">
         <div className="text-heading3-bold text-white max-xs:hidden">
           <div className="flex">
@@ -24,7 +24,7 @@ function Topbar() {
         </div>
       </Link>
 
-      {/* Menü Öğeleri */}
+     
       <div className="flex justify-between items-center gap-10 text-light-2 text-small-regular max-md:hidden">
         {headerMenu.map((item) => (
           <Link
@@ -38,7 +38,7 @@ function Topbar() {
         ))}
       </div>
 
-      {/* Cüzdan Bağlama */}
+      
       <div className="max-lg:hidden text-white">
         <button onClick={() => router.push('/404')} className="bg-blue px-4 py-2 rounded">
           Connect Wallet
