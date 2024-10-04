@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Helmet from "react-helmet";
 import Script from 'next/script';
 
 const cssLoader = `
@@ -87,8 +88,8 @@ const HomePage: React.FC = () => {
                       id="getWaitlistContainer"
                       data-waitlist_id="20824"
                   ></div>
-                  <Script  type="" dangerouslySetInnerHTML={{__html: cssLoader}}></Script>
-                  <Script  src="https://prod-waitlist-widget.s3.us-east-2.amazonaws.com/getwaitlist.min.js"></Script>
+                  <Script type="" dangerouslySetInnerHTML={{__html: cssLoader}}></Script>
+                  <Script src="https://prod-waitlist-widget.s3.us-east-2.amazonaws.com/getwaitlist.min.js"></Script>
 
               </div>
           </div>
