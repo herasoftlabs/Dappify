@@ -1,5 +1,5 @@
 import React from 'react';
-import ContractLayout from '../layout';
+import ContractLayout from '@/app/contract/layout';
 import EditContract from '@/components/contract/EditContract';
 import ContractSteps from '@/components/contract/ContractSteps';
 

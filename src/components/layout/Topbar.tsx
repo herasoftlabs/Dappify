@@ -14,11 +14,13 @@ function Topbar() {
       <Link href="/" className="flex items-center gap-4">
         <div className="text-heading3-bold text-white max-xs:hidden">
           <div className="flex">
-            Dappify
+
+         {/*  <Image src="/images/dappify-logo2.png" alt="Logo" width={120} height={200} /> */}
+
             <img
-              src="https://d1uoymq29mtp9f.cloudfront.net/web/img/fire.gif"
-              alt="fire icon"
-              className="w-[30px] h-[30px]"
+              src="/images/dappify-logo2.png"
+              alt="Logo"
+              className="w-[150px] h-auto"
             />
           </div>
         </div>

@@ -1,7 +1,4 @@
 import React from 'react';
-import Topbar from '../../components/layout/Topbar';
-import Sidebar from '../../components/layout/Sidebar';
-import RightAssistant from '../../components/layout/RightAssistant';
 
 interface ContractLayoutProps {
   children: React.ReactNode;
