@@ -2,7 +2,7 @@
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import useProject from "@/hooks/useProject";
-import { anchorTemplates } from "@/templates/anchorTemplates";
+import { anchorTemplates, AnchorTemplate } from "@/templates/anchorTemplates";
 import { projectCategories } from "@/data/templatesData"; 
 
 interface SelectTemplateProps {
@@ -14,23 +14,27 @@ const SelectTemplate: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const { projects, updateProjectContracts } = useProject(); 
 
-  const handleTemplateSelect = (projectId: string) => {
-    setSelectedTemplate(projectId);
+  const handleTemplateSelect = (templateId: string) => {
+    setSelectedTemplate(templateId);
   };
 
   const handleSaveAndProceed = () => {
     if (selectedTemplate) {
-     
-      const newContract = {
-        name: "lib.rs",
-        code: selectedTemplate === "blank-anchor"
-          ? JSON.parse(anchorTemplates.blankAnchorJson)
-          : selectedTemplate === "spl-token"
-          ? JSON.parse(anchorTemplates.splTokenJson)
-          : {},
-      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let templateCode: AnchorTemplate | any;
 
-      
+      if (selectedTemplate === "blank-anchor") {
+        templateCode = anchorTemplates.blankAnchorJson;
+      } else if (selectedTemplate === "spl-token") {
+        templateCode = anchorTemplates.splTokenJson;
+      } else {
+        templateCode = {};
+      }
+
+      const newContract = {
+        name: templateCode.name || "lib.rs",  
+        code: templateCode,
+      };
 
       const projectIdFromUrl = searchParams.get('id');
       if (projectIdFromUrl) {
@@ -45,7 +49,7 @@ const SelectTemplate: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
     <div className="flex flex-col items-center justify-center p-8">
       <h1 className="text-3xl font-semibold mb-6">Select a Template for your Solana dApp</h1>
    
-     
+    
       <div className="w-full max-w-5xl bg-white p-10 rounded-lg shadow-lg">
         {projectCategories.map((category, index) => (
           <div key={index} className="mb-6 text-left">

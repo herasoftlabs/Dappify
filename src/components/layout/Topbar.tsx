@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { headerMenu } from "@/data/menuData"; 
 import { useRouter } from "next/navigation";
@@ -14,13 +13,10 @@ function Topbar() {
       <Link href="/" className="flex items-center gap-4">
         <div className="text-heading3-bold text-white max-xs:hidden">
           <div className="flex">
-
-         {/*  <Image src="/images/dappify-logo2.png" alt="Logo" width={120} height={200} /> */}
-
             <img
               src="/images/dappify-logo2.png"
               alt="Logo"
-              className="w-[150px] h-auto"
+              className="w-[100px] h-auto"
             />
           </div>
         </div>

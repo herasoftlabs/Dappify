@@ -6,7 +6,6 @@ import InstructionPanel from "./InstructionPanel";
 import ParametersPanel from "./ParametersPanel";
 import PreviewPanel from "./PreviewPanel";
 
-
 interface Field {
   id: number;
   type: string;
@@ -51,10 +50,9 @@ const InstructionModal: React.FC<ModalProps> = ({ isOpen, onClose, instruction, 
   const [parameters, setParameters] = useState<Parameter[]>([]);
   const [returnType, setReturnType] = useState<string>("Result<()>");
 
- 
   useEffect(() => {
     if (instruction) {
-      setContextName(instruction.contextName || "");
+      setContextName(instruction.accounts[0].name || "");
       setInstructionName(instruction.name || "");
       setContextVisibility(instruction.contextVisibility ?? true);
       setInstructionVisibility(instruction.instructionVisibility ?? true);
@@ -63,7 +61,6 @@ const InstructionModal: React.FC<ModalProps> = ({ isOpen, onClose, instruction, 
       setParameters(instruction.parameters || []);
     }
   }, [instruction]);
-
 
   const generateContextCode = () => {
     if (!contextName) return "";
@@ -136,7 +133,7 @@ ${visibilityModifier}fn ${instructionName}<'info>(${allParameters}) -> ${returnT
     switch (activeTab) {
       case "settings":
         return (
-          <SettingsPanel 
+          <SettingsPanel
             contextName={contextName}
             setContextName={setContextName}
             instructionName={instructionName}
@@ -151,26 +148,27 @@ ${visibilityModifier}fn ${instructionName}<'info>(${allParameters}) -> ${returnT
         );
       case "context":
         return (
-          <ContextPanel 
-            contextFields={contextFields} 
+          <ContextPanel
+            contextFields={contextFields}
             setContextFields={setContextFields}
             generateContextCode={generateContextCode}
+            accounts={instruction.accounts} 
           />
         );
       case "instruction":
         return (
-          <InstructionPanel 
-            contextFields={contextFields} 
-            instructionAccounts={instructionAccounts} 
-            setInstructionAccounts={setInstructionAccounts} 
-            parameters={parameters} 
+          <InstructionPanel
+            contextFields={contextFields}
+            instructionAccounts={instructionAccounts}
+            setInstructionAccounts={setInstructionAccounts}
+            parameters={parameters}
           />
         );
       case "parameters":
         return (
-          <ParametersPanel 
-            parameters={parameters} 
-            setParameters={setParameters} 
+          <ParametersPanel
+            parameters={parameters}
+            setParameters={setParameters}
           />
         );
       default:

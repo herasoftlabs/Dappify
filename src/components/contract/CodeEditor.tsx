@@ -111,7 +111,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ code, onCodeChange }) => {
 
       
       monaco.languages.registerDocumentFormattingEditProvider("anchor", {
-        provideDocumentFormattingEdits: (model, options, token) => {
+        provideDocumentFormattingEdits: (model) => {
           const code = model.getValue();
           const formatted = code.replace(/let/g, "let ").replace(/fn/g, "fn ");
           return [

@@ -11,13 +11,25 @@ interface Field {
   fields?: { name: string; type: string }[];
 }
 
+interface Account {
+  name: string;
+  type: {
+    kind: string;
+    fields: {
+      name: string;
+      type: string;
+    }[];
+  };
+}
+
 interface ContextPanelProps {
   contextFields: Field[];
   setContextFields: (fields: Field[]) => void;
   generateContextCode: () => void; 
+  accounts: Account[]; 
 }
 
-const ContextPanel: React.FC<ContextPanelProps> = ({ contextFields, setContextFields, generateContextCode }) => {
+const ContextPanel: React.FC<ContextPanelProps> = ({ contextFields, setContextFields, generateContextCode, accounts }) => {
   const addContextField = () => {
     setContextFields([
       ...contextFields,
@@ -45,6 +57,7 @@ const ContextPanel: React.FC<ContextPanelProps> = ({ contextFields, setContextFi
           <FieldRow
             key={field.id}
             field={field}
+            accounts={accounts}
             onDelete={() => {
               setContextFields(contextFields.filter((f) => f.id !== field.id));
               generateContextCode(); 

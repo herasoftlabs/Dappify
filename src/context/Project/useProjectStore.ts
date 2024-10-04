@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-// Contract ve Project arayüzlerini tanımlıyoruz
+
 interface Contract {
   name: string;
   code: string;
@@ -16,15 +16,15 @@ interface Project {
   contracts: Contract[];
 }
 
-// Zustand store'un tipini belirtiyoruz
+
 interface ProjectStore {
   projects: Project[];
   addProject: (project: Project) => void;
   updateProjectContracts: (id: string, contracts: Contract[]) => void;
-  deleteProject: (id: string) => void; // Yeni silme fonksiyonu
+  deleteProject: (id: string) => void; 
 }
 
-// Zustand store'u oluşturuyoruz ve persist middleware'ini ekliyoruz
+
 const useProjectStore = create<ProjectStore>()(
   persist(
     (set) => ({

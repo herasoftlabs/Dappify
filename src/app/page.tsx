@@ -1,27 +1,26 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Helmet from "react-helmet";
 import Script from 'next/script';
 
-/* const cssLoader = `
+const cssLoader = `
 let head = document.getElementsByTagName('HEAD')[0];
 let link = document.createElement('link');
 link.rel = 'stylesheet';
 link.type = 'text/css';
 link.href = 'https://prod-waitlist-widget.s3.us-east-2.amazonaws.com/getwaitlist.min.css';
 head.appendChild(link);
-` */
+`
 
 const HomePage: React.FC = () => {
-  /* const [countdown, setCountdown] = useState({
+  const [countdown, setCountdown] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
-  }); */
+  });
 
-  /* useEffect(() => {
+  useEffect(() => {
     const targetDate = new Date('2024-12-05T09:00:00Z').getTime();
 
     const interval = setInterval(() => {
@@ -42,7 +41,7 @@ const HomePage: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []); */
+  }, []);
 
   return (
     <div className="h-screen flex flex-col bg-cover bg-center text-white" style={{ backgroundImage: "url('https://forkast.news/wp-content/uploads/2021/08/Solana-1260x787.png')" }}>
@@ -62,7 +61,7 @@ const HomePage: React.FC = () => {
 
 
           {/* Countdown Section */}
-          {/* <div className="mt-8 p-6 bg-gray-800 bg-opacity-70 rounded-lg shadow-lg">
+          <div className="mt-8 p-6 bg-gray-800 bg-opacity-70 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold mb-4">Launch Countdown</h2>
             <div className="flex space-x-4 justify-center">
               <div className="text-center">
@@ -88,11 +87,11 @@ const HomePage: React.FC = () => {
                       id="getWaitlistContainer"
                       data-waitlist_id="20824"
                   ></div>
-                  <Script type="" dangerouslySetInnerHTML={{__html: cssLoader}}></Script>
-                  <Script src="https://prod-waitlist-widget.s3.us-east-2.amazonaws.com/getwaitlist.min.js"></Script>
+                  <Script  type="" dangerouslySetInnerHTML={{__html: cssLoader}}></Script>
+                  <Script  src="https://prod-waitlist-widget.s3.us-east-2.amazonaws.com/getwaitlist.min.js"></Script>
 
               </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

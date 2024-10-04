@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import useModal from '@/hooks/useModal';
 import Card from '@/components/common/Card';
-import Modal from '@/components/common/Modal';
 import Sidebar from '../layout/Sidebar';
 import RightAssistant from '../layout/RightAssistant';
 import { FiSettings, FiCode, FiEdit2 } from "react-icons/fi";
@@ -13,13 +12,10 @@ import { useSearchParams } from 'next/navigation';
 import { jsonToAnchor } from '@/utils/jsonToAnchor';
 import { anchorToJson } from '@/utils/anchorToJson';
 import InstructionModal from '@/components/modals/InstructionModal/InstructionModal';
-import DataAccountModal from '@/components/modals/DataAccountModal/StructModal';
 
 interface SelectTemplateProps {
   setCurrentStep: (step: number) => void; 
 }
-
-
 
 const EditContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
   const { isOpen, openModal, closeModal } = useModal();
@@ -29,8 +25,11 @@ const EditContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
   const { projects, updateProjectContracts } = useProject();
   
   const [jsonCode, setJsonCode] = useState<any>({});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [rustCode, setRustCode] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [currentInstruction, setCurrentInstruction] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [currentAccount, setCurrentAccount] = useState<any>(null);
 
   useEffect(() => {
@@ -39,6 +38,7 @@ const EditContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
       if (currentProject && currentProject.contracts.length > 0) {
         const code = currentProject.contracts[0].code;
   
+        
         setJsonCode(code);
         const anchorCode = jsonToAnchor(code);
         setRustCode(anchorCode);
@@ -56,7 +56,6 @@ const EditContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
       setCurrentStep(2);
     }
   };
-  
 
   const handleEditInstruction = (instruction: any) => {
     setCurrentInstruction(instruction);
@@ -80,7 +79,6 @@ const EditContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
     });
     closeModal();
   };
-  
 
   const updateDataAccount = (updatedAccount: any) => {
     setJsonCode((prevJsonCode: typeof jsonCode) => {
@@ -122,14 +120,13 @@ const EditContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
           </div>
         </div>
         
-        {/* Whiteboard Container */}
+       
         <div className="whiteboard-container relative w-full mt-8">
           <div className={`whiteboard-card ${isFlipped ? "flipped" : ""}`}>
-            {/* Front Side */}
+           
             <div className="whiteboard-front">
-            
               <div className="flex gap-8">
-                {/* Instructions  */}
+               
                 <div className="flex-1 bg-[#1a2434] p-4 rounded-md shadow-md relative">
                   <h3 className="text-2xl font-bold mb-4 text-white">Instructions</h3>
                   {jsonCode.instructions && jsonCode.instructions.map((instruction: any, index: number) => (
@@ -156,7 +153,7 @@ const EditContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
                   ))}
                 </div>
 
-                {/* Accounts */}
+               
                 <div className="flex-1 bg-[#1a2434] p-4 rounded-md shadow-md relative">
                   <h3 className="text-2xl font-bold mb-4 text-white">Data Accounts</h3>
                   {jsonCode.accounts && jsonCode.accounts.map((account: any, index: number) => (
@@ -186,9 +183,9 @@ const EditContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
               </div>
             </div>
             
-            {/* Back Side */}
+            
             <div className="whiteboard-back">
-              {/* Code Editor section */}
+            
               <CodeEditor code={rustCode} onCodeChange={(value) => {
                 setRustCode(value);
                 try {
@@ -197,9 +194,7 @@ const EditContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
                   setJsonCode((prevJsonCode: typeof jsonCode) => {
                     return {
                       ...prevJsonCode,
-                      name: newJsonCode.name,
-                      instructions: newJsonCode.instructions,
-                      accounts: newJsonCode.accounts,
+                      ...newJsonCode, 
                     };
                   });
                 } catch (e) {
@@ -220,7 +215,7 @@ const EditContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
       </Card>
       <RightAssistant />
 
-      {/* Instruction Modal */}
+     
       {currentInstruction && (
         <InstructionModal
           isOpen={isOpen}

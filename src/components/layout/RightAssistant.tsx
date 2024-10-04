@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import { FaRobot, FaTimes, FaBars } from 'react-icons/fa';
+import { FaTimes, FaBars } from 'react-icons/fa';
 import { motion } from 'framer-motion'; 
 
 const RightAssistant: React.FC = () => {

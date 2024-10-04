@@ -29,19 +29,17 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
 }) => {
   return (
     <div>
-    
       <div className="my-5">
         <label className="block mb-1 font-medium">Context Name:</label>
         <input
           type="text"
-          value={contextName}
+          value={contextName} 
           onChange={(e) => setContextName(e.target.value)}
           placeholder="Enter context name"
           className="border p-2 w-full rounded bg-gray-100"
         />
       </div>
-      
-     
+
       <div className="my-5">
         <label className="block mb-1 font-medium">Instruction Name:</label>
         <input
@@ -53,22 +51,28 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
         />
       </div>
 
-    
       <div className="my-5">
         <label className="block mb-1 font-medium">Visibility:</label>
         <div className="flex items-center gap-4">
           <label className="flex items-center">
-            <input type="checkbox" checked={contextVisibility} onChange={() => setContextVisibility(!contextVisibility)} />
+            <input
+              type="checkbox"
+              checked={contextVisibility}
+              onChange={() => setContextVisibility(!contextVisibility)}
+            />
             <span className="ml-2">Public Context</span>
           </label>
           <label className="flex items-center">
-            <input type="checkbox" checked={instructionVisibility} onChange={() => setInstructionVisibility(!instructionVisibility)} />
+            <input
+              type="checkbox"
+              checked={instructionVisibility}
+              onChange={() => setInstructionVisibility(!instructionVisibility)}
+            />
             <span className="ml-2">Public Instruction</span>
           </label>
         </div>
       </div>
 
-    
       <div className="my-5">
         <label className="block mb-1 font-medium">Return Type:</label>
         <select
@@ -77,7 +81,9 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
           className="border p-2 w-full rounded bg-gray-100"
         >
           {returnTypes.map((type) => (
-            <option key={type} value={type}>{type}</option>
+            <option key={type} value={type}>
+              {type}
+            </option>
           ))}
         </select>
       </div>

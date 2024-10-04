@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import Modal from '@/components/common/Modal';
 import Loader from '@/components/common/Loader';
-import useProject from '@/hooks/useProject'; // useProject hook'u kullanılıyor
+import useProject from '@/hooks/useProject'; 
 
 const DashboardPage: React.FC = () => {
   const router = useRouter();
@@ -12,15 +12,15 @@ const DashboardPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [projectName, setProjectName] = useState('');
 
-  // useProject hook'u ile Zustand store'una erişim sağlıyoruz
-  const { projects, addProject, deleteProject } = useProject(); // deleteProject'i buradan çağırıyoruz
+  
+  const { projects, addProject, deleteProject } = useProject(); 
 
   const handleCreateDapp = () => {
-    // Yükleyiciyi başlat
+   
     setIsLoading(true);
 
     setTimeout(() => {
-      // Yeni proje bilgileri oluşturuluyor
+      
       const timestamp = Date.now().toString();
       const sanitizedProjectName = projectName.replace(/[^a-zA-Z0-9]/g, '');
       const folderName = `/projects/${sanitizedProjectName}_${timestamp}`;
@@ -35,28 +35,28 @@ const DashboardPage: React.FC = () => {
         contracts: [],
       };
 
-      // Yeni projeyi Zustand store'a ekliyoruz
+     
       addProject(newProject);
 
-      // Loader ve modal durumlarını kapatıyoruz
+   
       setIsLoading(false);
       setIsModalOpen(false);
-    }, 2000); // 2 saniyelik gecikme simülasyonu
+    }, 2000); 
   };
 
   const handleDeleteDapp = (dappId: string) => {
-    // Projeyi Zustand store'dan siliyoruz
+    
     deleteProject(dappId);
   };
 
   const handleDappClick = (dappId: string) => {
-    // Kullanıcıyı contract sayfasına yönlendir
+    
     router.push(`/contract?id=${dappId}`);
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    const userLocale = navigator.language || 'en-US'; // Kullanıcının tarayıcı dilini al
+    const userLocale = navigator.language || 'en-US';
 
     return date.toLocaleString(userLocale, {
       year: 'numeric',

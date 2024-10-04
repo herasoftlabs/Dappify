@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 interface Field {
   id: number;
@@ -10,29 +10,33 @@ interface Field {
   fields?: { name: string; type: string }[];
 }
 
+interface Account {
+  name: string;
+  type: {
+    kind: string;
+    fields: {
+      name: string;
+      type: string;
+    }[];
+  };
+}
+
 interface FieldRowProps {
   field: Field;
+  accounts?: Account[]; 
   onDelete: () => void;
   onFieldChange: (id: number, key: keyof Field, value: string | boolean | { name: string; type: string }[]) => void;
 }
 
-const FieldRow: React.FC<FieldRowProps> = ({ field, onDelete, onFieldChange }) => {
-  const [fakeData] = useState({
-    structName: "FakeData",
-    fields: [
-      { name: "is_open_to_vote", type: "bool" },
-      { name: "gm", type: "u64" },
-      { name: "gn", type: "u64" },
-    ],
-  });
-
+const FieldRow: React.FC<FieldRowProps> = ({ field, accounts = [], onDelete, onFieldChange }) => {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedAccountName = e.target.value;
     onFieldChange(field.id, "accountName", selectedAccountName);
 
-   
-    if (selectedAccountName === fakeData.structName) {
-      onFieldChange(field.id, "fields", fakeData.fields);
+
+    const selectedAccount = accounts.find((account) => account.name === selectedAccountName);
+    if (selectedAccount) {
+      onFieldChange(field.id, "fields", selectedAccount.type.fields);
     } else {
       onFieldChange(field.id, "fields", []);
     }
@@ -53,7 +57,11 @@ const FieldRow: React.FC<FieldRowProps> = ({ field, onDelete, onFieldChange }) =
         onChange={handleSelectChange}
       >
         <option value="">Select Struct</option>
-        <option value={fakeData.structName}>{fakeData.structName}</option>
+        {accounts && accounts.map((account) => (
+          <option key={account.name} value={account.name}>
+            {account.name}
+          </option>
+        ))}
       </select>
       <button onClick={onDelete} className="bg-red-500 text-white px-3 py-1 rounded">
         Delete
