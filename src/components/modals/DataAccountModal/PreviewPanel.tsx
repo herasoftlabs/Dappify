@@ -1,20 +1,20 @@
 import React from "react";
-import { Instruction } from "@/types/types";
+import { Account } from "@/types/types";
 
 interface PreviewPanelProps {
-  instructionCode: string;
-  instruction: Instruction; 
-  onSave: (updatedInstruction: Instruction) => void; 
+  accountCode: string; 
+  account: Account; 
+  onSave: (updatedAccount: Account) => void; 
 }
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({
-  instructionCode,
-  instruction,
+  accountCode,
+  account,
   onSave
 }) => {
   const handleSave = () => {
     if (onSave) {
-      onSave(instruction); 
+      onSave(account); 
     }
   };
 
@@ -23,19 +23,18 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
       <div className="flex flex-col gap-4 flex-grow">
         <div className="flex flex-col gap-4">
           <div>
-            <h3 className="text-lg font-semibold">Preview Instruction Code</h3>
+            <h3 className="text-lg font-semibold">Preview Account Code</h3>
             <div
               className={`bg-gray-200 px-4 py-5 rounded shadow-inner text-sm border border-gray-300 overflow-y-auto max-h-[300px] `}
             >
               <pre className="whitespace-pre-wrap text-[10px]">
-                {instructionCode}
+                {accountCode}
               </pre>
             </div>
           </div>
         </div>
       </div>
 
-    
       <div className="flex gap-2 mt-4 sticky bottom-0 bg-gray-100 py-4">
         <button
           className="bg-[#da462c] text-white w-full px-4 py-2 rounded hover:bg-blue-700"
@@ -47,7 +46,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
           className="bg-[#212f48] text-white w-full px-4 py-2 rounded hover:bg-blue-700"
           onClick={handleSave}
         >
-          Save Struct
+          Save Account
         </button>
       </div>
     </div>

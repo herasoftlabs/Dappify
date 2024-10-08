@@ -6,7 +6,7 @@ interface TabsProps {
 }
 
 const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab }) => {
-  const tabs = ["settings", "context", "parameters", "instruction", "additional"];
+  const tabs = ["settings", "fields"];
 
   return (
     <div className="mb-4 border-b">

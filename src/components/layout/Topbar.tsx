@@ -2,14 +2,18 @@
 
 import Link from "next/link";
 import { headerMenu } from "@/data/menuData"; 
-import { useRouter } from "next/navigation";
+import { ConnectButton, useAccount, useChains } from '@particle-network/connectkit';
+
 
 function Topbar() {
-  const router = useRouter();
+  
+  
+
 
   return (
     <nav className="topbar flex items-center justify-between px-52 py-4 bg-primary-500 text-white">
      
+      {/* Logo */}
       <Link href="/" className="flex items-center gap-4">
         <div className="text-heading3-bold text-white max-xs:hidden">
           <div className="flex">
@@ -22,7 +26,7 @@ function Topbar() {
         </div>
       </Link>
 
-     
+      {/* Menü */}
       <div className="flex justify-between items-center gap-10 text-light-2 text-small-regular max-md:hidden">
         {headerMenu.map((item) => (
           <Link
@@ -30,17 +34,18 @@ function Topbar() {
             href={item.path}
             className="flex items-center gap-2 font-semibold text-[white]/100 hover:text-[white]/70"
           >
-           
             {item.name}
           </Link>
         ))}
       </div>
 
-      
-      <div className="max-lg:hidden text-white">
-        <button onClick={() => router.push('/404')} className="bg-blue px-4 py-2 rounded">
-          Connect Wallet
-        </button>
+      {/* Network Switcher ve Cüzdan Bağlama Butonu */}
+      <div className="flex items-center gap-6">
+      <ConnectButton />
+          
+
+
+        
       </div>
     </nav>
   );

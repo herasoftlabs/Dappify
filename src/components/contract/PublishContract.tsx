@@ -1,9 +1,14 @@
+"use client";
 import React, { useState } from "react";
 import Card from "@/components/common/Card";
 import Button from "@/components/common/Button";
 import Modal from "@/components/common/Modal";
+interface SelectTemplateProps {
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  projectId: string;
+}
 
-const PublishContract: React.FC = () => {
+const PublishContract: React.FC<SelectTemplateProps> = ({ setCurrentStep, projectId }) => {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [isSettingUp, setIsSettingUp] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,7 +58,7 @@ const PublishContract: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       alert(`Template "${selectedTemplate}" set up successfully on our server!`);
     } catch (error) {
-      console.error("Setup error:", error);
+      /* console.error("Setup error:", error); */
       alert("Failed to set up the template.");
     } finally {
       setIsSettingUp(false);
@@ -76,7 +81,7 @@ const PublishContract: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       alert(`Files uploaded successfully to server at ${serverIp}!`);
     } catch (error) {
-      console.error("Upload error:", error);
+      /* console.error("Upload error:", error); */
       alert("Failed to upload the files to the server.");
     } finally {
       setIsUploading(false);

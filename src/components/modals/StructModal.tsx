@@ -474,7 +474,7 @@ ${visibilityCode} struct ${structName}${lifetime} {
             <button
               className="bg-[#212f48] text-white w-full px-4 py-2 rounded hover:bg-blue-700"
               onClick={() => {
-                console.log(generateAnchorCode());
+                /* console.log(generateAnchorCode()); */
                 onClose();
               }}
             >

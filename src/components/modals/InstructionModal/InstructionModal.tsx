@@ -4,181 +4,149 @@ import SettingsPanel from "./SettingsPanel";
 import ContextPanel from "./ContextPanel";
 import InstructionPanel from "./InstructionPanel";
 import ParametersPanel from "./ParametersPanel";
+import AdditionalPanel from "./AdditionalPanel"; 
 import PreviewPanel from "./PreviewPanel";
-
-interface Field {
-  id: number;
-  type: string;
-  name: string;
-  accountName: string;
-  isMutable: boolean;
-  isPublic: boolean;
-  selectedVariable?: string;
-  isDropdownOpen?: boolean;
-}
-
-interface Parameter {
-  id: number;
-  paramName: string;
-  accountName: string;
-}
-
-interface InstructionAccount {
-  id: number;
-  accountName: string;
-  selectedVariable?: string;
-  isDropdownOpen?: boolean;
-  showAssignSelect?: boolean;
-  showAddSelect?: boolean;
-}
+import { Instruction, Account } from "@/types/types";
+import { jsonToAnchor } from "@/utils/jsonToAnchor";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  instruction?: any;
-  onSave?: (updatedInstruction: any) => void;
+  instruction: Instruction | null; 
+  onSave?: (updatedInstruction: Instruction) => void;
+  accounts: Account[]; 
 }
 
-const InstructionModal: React.FC<ModalProps> = ({ isOpen, onClose, instruction, onSave }) => {
+const InstructionModal: React.FC<ModalProps> = ({ isOpen, onClose, instruction, onSave, accounts }) => {
   const [activeTab, setActiveTab] = useState<string>("settings");
-  const [contextName, setContextName] = useState<string>("");
-  const [instructionName, setInstructionName] = useState<string>("");
-  const [contextVisibility, setContextVisibility] = useState<boolean>(true);
-  const [instructionVisibility, setInstructionVisibility] = useState<boolean>(true);
-  const [contextFields, setContextFields] = useState<Field[]>([]);
-  const [instructionAccounts, setInstructionAccounts] = useState<InstructionAccount[]>([]);
-  const [parameters, setParameters] = useState<Parameter[]>([]);
-  const [returnType, setReturnType] = useState<string>("Result<()>");
+  const [currentInstruction, setCurrentInstruction] = useState<Instruction | null>(null); 
+  const [contextCode, setContextCode] = useState<string>("");
+  const [instructionCode, setInstructionCode] = useState<string>("");
 
   useEffect(() => {
-    if (instruction) {
-      setContextName(instruction.accounts[0].name || "");
-      setInstructionName(instruction.name || "");
-      setContextVisibility(instruction.contextVisibility ?? true);
-      setInstructionVisibility(instruction.instructionVisibility ?? true);
-      setContextFields(instruction.contextFields || []);
-      setInstructionAccounts(instruction.instructionAccounts || []);
-      setParameters(instruction.parameters || []);
+    if (!instruction) {
+      const newInstruction = {
+        id: `instruction-${Date.now()}`,  
+        name: '',
+        description: '',
+        parameters: [],
+        context: [],
+        pdas: [],
+        errors: [],
+        events: [],
+        access_control: '',
+      };
+      setCurrentInstruction(newInstruction);
+    } else {
+      if (!instruction.id) {
+        instruction.id = `instruction-${Date.now()}`; 
+      }
+      setCurrentInstruction(instruction);
+      generateCode(instruction, accounts);
     }
-  }, [instruction]);
+  }, [instruction, accounts]);
+  
+  
 
-  const generateContextCode = () => {
-    if (!contextName) return "";
-
-    const visibilityModifier = contextVisibility ? "pub " : "";
-    const contextDeclarations = contextFields
-      .map((field) => {
-        const accountName = field.accountName || "Unknown";
-        return `${visibilityModifier}${field.name}: Account<'info, ${accountName}>`;
-      })
-      .join("\n    ");
-
-    return `
-#[derive(Accounts)]
-${visibilityModifier}struct ${contextName}<'info> {
-  ${contextDeclarations}
-}
-    `;
-  };
-
-  const generateInstructionCode = (): string => {
-    if (!instructionName) return "";
-
-    const visibilityModifier = instructionVisibility ? "pub " : "";
-    const ctxParameter = contextName ? `ctx: Context<${contextName}>` : "";
-    const parameterDeclarations = parameters
-      .map((param) => `${param.paramName}: ${param.accountName}`)
-      .join(", ");
-    const allParameters = [ctxParameter, parameterDeclarations].filter(Boolean).join(", ");
-
-    const instructionBody = instructionAccounts
-      .map((account) => {
-        const baseAccount = parameters.some((param) => param.paramName === account.accountName)
-          ? account.accountName
-          : `ctx.accounts.${account.accountName}`;
-
-        return account.selectedVariable
-          ? `${baseAccount}.${account.selectedVariable}`
-          : baseAccount;
-      })
-      .join("\n    ");
-
-    return `
-${visibilityModifier}fn ${instructionName}<'info>(${allParameters}) -> ${returnType} {
-    ${instructionBody}
-}
-    `;
-  };
-
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (currentInstruction) {
+      generateCode(currentInstruction, accounts); 
+    }
+  }, [currentInstruction, accounts]);
 
   const handleSave = () => {
-    const updatedInstruction = {
-      contextName,
-      name: instructionName,
-      contextVisibility,
-      instructionVisibility,
-      contextFields,
-      instructionAccounts,
-      parameters,
-      returnType,
-    };
-    if (onSave) {
-      onSave(updatedInstruction);
+    if (currentInstruction && onSave) {
+      /* console.log('Saving Instruction:', currentInstruction);  */
+      onSave(currentInstruction);
     }
     onClose();
   };
+  
+  
+
+  const handleFieldChange = (key: keyof Instruction, value: any) => {
+    if (currentInstruction) {
+      const updatedInstruction = { ...currentInstruction, [key]: value };
+      /* console.log('Updated Instruction Field:', key, value);  */
+      setCurrentInstruction(updatedInstruction);
+    }
+  };
+  
+
+  const generateCode = (instruction: Instruction, accounts: Account[]) => { 
+    const idl = {
+      name: "example_program",
+      instructions: [instruction],
+      accounts: accounts, 
+      types: []
+    };
+
+    const generatedCode = jsonToAnchor(idl); 
+    setInstructionCode(generatedCode);
+    setContextCode(generatedCode);
+  };
 
   const renderTabContent = () => {
+    if (!currentInstruction) return null;
+
     switch (activeTab) {
       case "settings":
         return (
-          <SettingsPanel
-            contextName={contextName}
-            setContextName={setContextName}
-            instructionName={instructionName}
-            setInstructionName={setInstructionName}
-            contextVisibility={contextVisibility}
-            setContextVisibility={setContextVisibility}
-            instructionVisibility={instructionVisibility}
-            setInstructionVisibility={setInstructionVisibility}
-            returnType={returnType}
-            setReturnType={setReturnType}
+          <SettingsPanel 
+            instruction={currentInstruction} 
+            onChange={handleFieldChange} 
           />
         );
       case "context":
         return (
           <ContextPanel
-            contextFields={contextFields}
-            setContextFields={setContextFields}
-            generateContextCode={generateContextCode}
-            accounts={instruction.accounts} 
-          />
-        );
-      case "instruction":
-        return (
-          <InstructionPanel
-            contextFields={contextFields}
-            instructionAccounts={instructionAccounts}
-            setInstructionAccounts={setInstructionAccounts}
-            parameters={parameters}
+            context={currentInstruction.context}
+            accounts={accounts} 
+            onChange={(updatedContext) => handleFieldChange("context", updatedContext)}
           />
         );
       case "parameters":
         return (
-          <ParametersPanel
-            parameters={parameters}
-            setParameters={setParameters}
+          <ParametersPanel 
+            parameters={currentInstruction.parameters}
+            onChange={(updatedParameters) => handleFieldChange("parameters", updatedParameters)}
           />
+        );
+      case "instruction":
+        return (
+          <InstructionPanel 
+            instructionBody={currentInstruction.description} 
+            onChange={(body) => handleFieldChange("description", body)} 
+          />
+        );
+      case "additional":
+        return (
+          <AdditionalPanel 
+          additionalData={{
+            pdas: currentInstruction.pdas,
+            errors: currentInstruction.errors,
+            events: currentInstruction.events,
+            access_control: currentInstruction.access_control,
+          }}
+          onChange={(updatedAdditional) => {
+            handleFieldChange("pdas", updatedAdditional.pdas);
+            handleFieldChange("errors", updatedAdditional.errors);
+            handleFieldChange("events", updatedAdditional.events);
+            handleFieldChange("access_control", updatedAdditional.access_control);
+          }}
+        />
         );
       default:
         return null;
     }
   };
 
+  if (!isOpen || !currentInstruction) return null;
+
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 overflow-hidden">
       <div className="bg-white rounded-lg shadow-lg flex max-w-5xl w-full min-h-[70vh] overflow-hidden">
+        
         <div className="w-2/3 p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Edit Instruction</h2>
@@ -188,13 +156,12 @@ ${visibilityModifier}fn ${instructionName}<'info>(${allParameters}) -> ${returnT
           </div>
           <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
           {renderTabContent()}
-          <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4">
-            Save
-          </button>
         </div>
+        
         <PreviewPanel
-          contextCode={generateContextCode()}
-          instructionCode={generateInstructionCode()}
+          instructionCode={instructionCode}
+          instruction={currentInstruction}
+          onSave={handleSave}
         />
       </div>
     </div>

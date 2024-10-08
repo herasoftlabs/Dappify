@@ -1,5 +1,4 @@
 import React from 'react';
-import { ProjectProvider } from '@/context/Project/ProjectContext';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -7,15 +6,9 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
-    <div className="flex w-full flex-col h-screen">
-     
-      <div className="p-6 flex items-center justify-center bg-gray-100">
-      <ProjectProvider>
-      
-      {children}
-    </ProjectProvider>
-      </div>
-    </div>
+    <div className="p-6 flex items-center justify-center bg-gray-100">
+    {children}
+  </div>
   );
 };
 

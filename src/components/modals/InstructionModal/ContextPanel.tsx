@@ -1,71 +1,62 @@
 import React from "react";
 import FieldRow from "./FieldRow";
-
-interface Field {
-  id: number;
-  type: string;
-  name: string;
-  accountName: string;
-  isMutable: boolean;
-  isPublic: boolean;
-  fields?: { name: string; type: string }[];
-}
-
-interface Account {
-  name: string;
-  type: {
-    kind: string;
-    fields: {
-      name: string;
-      type: string;
-    }[];
-  };
-}
+import { ContextAccount, Account } from "@/types/types";
 
 interface ContextPanelProps {
-  contextFields: Field[];
-  setContextFields: (fields: Field[]) => void;
-  generateContextCode: () => void; 
+  context: ContextAccount[];
   accounts: Account[]; 
+  onChange: (updatedContext: ContextAccount[]) => void;
+  
 }
 
-const ContextPanel: React.FC<ContextPanelProps> = ({ contextFields, setContextFields, generateContextCode, accounts }) => {
-  const addContextField = () => {
-    setContextFields([
-      ...contextFields,
-      { id: Date.now(), type: "Account", name: "", accountName: "", isMutable: false, isPublic: true, fields: [] },
-    ]);
-    generateContextCode(); 
+const ContextPanel: React.FC<ContextPanelProps> = ({ context, accounts, onChange }) => {
+  const handleFieldChange = (index: number, key: keyof ContextAccount, value: any) => {
+    const updatedContext = [...context];
+    updatedContext[index] = { ...updatedContext[index], [key]: value };
+    onChange(updatedContext);
   };
 
-  const handleFieldChange = (id: number, key: keyof Field, value: string | boolean | { name: string; type: string }[]) => {
-    setContextFields(
-      contextFields.map((field) =>
-        field.id === id ? { ...field, [key]: value } : field
-      )
-    );
-    generateContextCode(); 
+  const handleAddField = () => {
+    const newField: ContextAccount = {
+      name: "",
+      type: "",
+      is_mut: false,
+      is_signer: false,
+      isLifeTime: false,
+      data: "",
+    };
+    onChange([...context, newField]);
+  };
+
+  const handleAddConstraint = (index: number, constraintKey: keyof ContextAccount, value: string) => {
+    const updatedContext = [...context];
+    const currentConstraints = updatedContext[index].constraints || {};
+    updatedContext[index].constraints = { ...currentConstraints, [value]: "" };
+    onChange(updatedContext);
   };
 
   return (
     <div>
-      <button onClick={addContextField} className="bg-blue text-white px-4 py-2 rounded">
-        Add Account Field
+      <button
+        onClick={handleAddField}
+        className="bg-primary text-white px-4 py-2 rounded my-1"
+      >
+        Add Context
       </button>
-      <div className="mt-4">
-        {contextFields.map((field) => (
-          <FieldRow
-            key={field.id}
-            field={field}
-            accounts={accounts}
-            onDelete={() => {
-              setContextFields(contextFields.filter((f) => f.id !== field.id));
-              generateContextCode(); 
-            }}
-            onFieldChange={handleFieldChange}
-          />
-        ))}
-      </div>
+
+      {context.map((field, index) => (
+        <FieldRow
+          key={index}
+          field={field}
+          accounts={accounts}
+          onDelete={() => {
+            const updatedContext = context.filter((_, i) => i !== index);
+            onChange(updatedContext);
+          }}
+          onFieldChange={(key, value) => handleFieldChange(index, key, value)}
+          onAddConstraint={(constraintKey, value) => handleAddConstraint(index, constraintKey, value)} 
+        />
+      ))}
     </div>
   );
 };

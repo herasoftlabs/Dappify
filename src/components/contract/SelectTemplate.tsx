@@ -1,93 +1,117 @@
 "use client";
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import useProject from "@/hooks/useProject";
-import { anchorTemplates, AnchorTemplate } from "@/templates/anchorTemplates";
-import { projectCategories } from "@/data/templatesData"; 
+import React, { useState } from 'react';
+import useProject from '@/hooks/useProject';
+import { templates } from '@/data/templatesData';
+import Card from '@/components/common/Card';
+import { Account } from '@/types/types'; // İlgili türleri import edin
 
 interface SelectTemplateProps {
-  setCurrentStep: (step: number) => void; 
+  projectId: string;
+  setCurrentStep: (step: number) => void;
 }
 
-const SelectTemplate: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
-  const searchParams = useSearchParams();
+const SelectTemplate: React.FC<SelectTemplateProps> = ({ projectId, setCurrentStep }) => {
+  const { projects, updateProjectContracts, addProgramVersion } = useProject();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const { projects, updateProjectContracts } = useProject(); 
+
+  const project = projects.find((proj) => proj.id === projectId);
+
+  if (!project) {
+    return <div>Project not found.</div>;
+  }
 
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId);
   };
 
-  const handleSaveAndProceed = () => {
-    if (selectedTemplate) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let templateCode: AnchorTemplate | any;
+  const handleConfirm = () => {
+    if (!selectedTemplate) {
+      alert('Please select a template.');
+      return;
+    }
 
-      if (selectedTemplate === "blank-anchor") {
-        templateCode = anchorTemplates.blankAnchorJson;
-      } else if (selectedTemplate === "spl-token") {
-        templateCode = anchorTemplates.splTokenJson;
+    const selectedTemplateData = templates.find((temp) => temp.id === selectedTemplate);
+
+    if (selectedTemplateData) {
+      const timestamp = new Date().toISOString();
+      const versionNumber = 1;
+
+      if (selectedTemplate === 'blank') {
+        updateProjectContracts(projectId, []);
+        addProgramVersion(projectId, {
+          id: `${projectId}-v1`,
+          projectId,
+          name: 'Blank Version',
+          description: 'A blank template to start from scratch.',
+          version: 'v1.0.0',
+          versionNumber: versionNumber,
+          createdAt: timestamp,
+          instructions: [],
+          accounts: [],
+          errors: [],
+          pdas: [],
+          events: [],
+          access_controls: [],
+          cpi_calls: [],
+          token_integrations: [],
+          advanced_settings: {
+            reentrancy_protection: false,
+            serialization: { zero_copy: false },
+            constraints: [],
+            multisig: { enabled: false },
+            time_based_restrictions: [],
+          },
+        });
       } else {
-        templateCode = {};
+       
+        const adjustedAccounts = selectedTemplateData.program.accounts.map((account: any) => ({
+          ...account,
+          type: account.type === 'struct' || account.type === 'enum' ? account.type : 'struct', 
+        }));
+
+        const programWithMeta = {
+          ...selectedTemplateData.program,
+          id: `${projectId}-v1`,
+          projectId,
+          createdAt: timestamp,
+          versionNumber: versionNumber,
+          accounts: adjustedAccounts, 
+        };
+
+        updateProjectContracts(projectId, [programWithMeta]);
+        addProgramVersion(projectId, programWithMeta);
       }
 
-      const newContract = {
-        name: templateCode.name || "lib.rs",  
-        code: templateCode,
-      };
-
-      const projectIdFromUrl = searchParams.get('id');
-      if (projectIdFromUrl) {
-        updateProjectContracts(projectIdFromUrl, [newContract]);
-        console.log("Updated Contracts:", newContract);
-        setCurrentStep(1); 
-      }
+      setCurrentStep(1);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-8">
-      <h1 className="text-3xl font-semibold mb-6">Select a Template for your Solana dApp</h1>
-   
-    
-      <div className="w-full max-w-5xl bg-white p-10 rounded-lg shadow-lg">
-        {projectCategories.map((category, index) => (
-          <div key={index} className="mb-6 text-left">
-            <h2 className="text-xl font-bold">{category.category}</h2>
-            <small className="text-xl font-thin">{category.hint}</small>
-            <div className="flex flex-wrap gap-4 mt-5">
-              {category.projects.map((project, projectIndex) => (
-                <div
-                  key={project.id}
-                  className={`relative cursor-pointer w-[200px] p-4 rounded-md text-white text-center font-medium ${
-                    selectedTemplate === project.id
-                      ? "bg-[#212f48]" 
-                      : "bg-gradient-to-r from-purple-400 to-pink-500"
-                  } ${project.isComingSoon ? "pointer-events-none opacity-60" : ""}`}
-                  onClick={() => !project.isComingSoon && handleTemplateSelect(project.id)}
-                >
-                  {project.name}
-
-                  {project.isComingSoon && (
-                    <div className="absolute top-[-20px] right-[-10px] bg-red-500 text-white text-xs px-2 py-1 rounded-full shadow-md">
-                      <small>Coming Soon</small>
-                    </div>
-                  )}
-                </div>
-              ))}
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-4">Select a Template for {project.name}</h1>
+      <Card className="flex-grow overflow-y-auto max-h-screen p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {templates.map((template) => (
+            <div
+              key={template.id}
+              className={`border p-4 rounded-md cursor-pointer ${
+                selectedTemplate === template.id ? 'border-blue-500' : 'border-gray-300'
+              }`}
+              onClick={() => handleTemplateSelect(template.id)}
+            >
+              <h2 className="text-xl font-semibold">{template.name}</h2>
+              <p className="text-gray-600">{template.description}</p>
             </div>
-          </div>
-        ))}
-
-        <div className="flex justify-end mt-8">
-          <button
-            className="bg-[#1a2434] text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-300"
-            onClick={handleSaveAndProceed}
-            disabled={!selectedTemplate}
-          >
-            Save and Proceed
-          </button>
+          ))}
         </div>
+      </Card>
+      <div className="mt-6 flex justify-end">
+        <button
+          className="bg-primary text-white px-4 py-2 rounded-md"
+          onClick={handleConfirm}
+        >
+          Confirm Selection
+        </button>
       </div>
     </div>
   );

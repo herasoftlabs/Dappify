@@ -1,90 +1,63 @@
 import React from "react";
+import { Instruction } from "@/types/types";
 
 interface SettingsPanelProps {
-  contextName: string;
-  setContextName: (name: string) => void;
-  instructionName: string;
-  setInstructionName: (name: string) => void;
-  contextVisibility: boolean;
-  setContextVisibility: (visibility: boolean) => void;
-  instructionVisibility: boolean;
-  setInstructionVisibility: (visibility: boolean) => void;
-  returnType: string;
-  setReturnType: (type: string) => void;
+  instruction: Instruction;
+  onChange: (key: keyof Instruction, value: any) => void;
 }
 
-const returnTypes = ["Result<()>", "u32", "String"];
-
-const SettingsPanel: React.FC<SettingsPanelProps> = ({
-  contextName,
-  setContextName,
-  instructionName,
-  setInstructionName,
-  contextVisibility,
-  setContextVisibility,
-  instructionVisibility,
-  setInstructionVisibility,
-  returnType,
-  setReturnType,
-}) => {
+const SettingsPanel: React.FC<SettingsPanelProps> = ({ instruction, onChange }) => {
   return (
     <div>
-      <div className="my-5">
-        <label className="block mb-1 font-medium">Context Name:</label>
+     
+      <div className="mb-4">
+        <label className="font-semibold">Name:</label>
         <input
           type="text"
-          value={contextName} 
-          onChange={(e) => setContextName(e.target.value)}
-          placeholder="Enter context name"
-          className="border p-2 w-full rounded bg-gray-100"
+          value={instruction.name}
+          onChange={(e) => onChange("name", e.target.value)}
+          placeholder="Instruction Name"
+          className="border p-2 rounded mb-4 w-full"
         />
       </div>
 
-      <div className="my-5">
-        <label className="block mb-1 font-medium">Instruction Name:</label>
+      
+      <div className="mb-4">
+        <label className="font-semibold">Lifetime:</label>
         <input
           type="text"
-          value={instructionName}
-          onChange={(e) => setInstructionName(e.target.value)}
-          placeholder="Enter instruction name"
-          className="border p-2 w-full rounded bg-gray-100"
+          value={instruction.lifetime || ""} 
+          onChange={(e) => onChange("lifetime", e.target.value)}
+          placeholder={instruction.lifetime || ""}
+          className="border p-2 rounded w-full mt-2"
         />
       </div>
 
-      <div className="my-5">
-        <label className="block mb-1 font-medium">Visibility:</label>
-        <div className="flex items-center gap-4">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={contextVisibility}
-              onChange={() => setContextVisibility(!contextVisibility)}
-            />
-            <span className="ml-2">Public Context</span>
-          </label>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              checked={instructionVisibility}
-              onChange={() => setInstructionVisibility(!instructionVisibility)}
-            />
-            <span className="ml-2">Public Instruction</span>
-          </label>
-        </div>
-      </div>
-
-      <div className="my-5">
-        <label className="block mb-1 font-medium">Return Type:</label>
+      
+      <div className="mb-4">
+        <label className="font-semibold">Visibility:</label>
         <select
-          value={returnType}
-          onChange={(e) => setReturnType(e.target.value)}
-          className="border p-2 w-full rounded bg-gray-100"
+          value={instruction.visibility || "public"}
+          onChange={(e) => onChange("visibility", e.target.value)}
+          className="border p-2 rounded w-full mt-2"
         >
-          {returnTypes.map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+        </select>
+      </div>
+
+      
+      <div className="mb-4">
+        <label className="font-semibold">Return Type:</label>
+        <select
+          value={instruction.returnType || "Result<()>"}
+          onChange={(e) => onChange("returnType", e.target.value)}
+          className="border p-2 rounded w-full mt-2"
+        >
+          <option value="Result<()>">Result&lt;()&gt;</option>
+          <option value="Result<u64>">Result&lt;u64&gt;</option>
+          <option value="ProgramResult">ProgramResult</option>
+          <option value="()">() - Unit Type</option>
         </select>
       </div>
     </div>

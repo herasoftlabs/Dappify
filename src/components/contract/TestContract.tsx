@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import Card from "@/components/common/Card";
 import useProject from "@/hooks/useProject";
@@ -9,13 +10,14 @@ interface CodeType {
 }
 
 interface SelectTemplateProps {
-  setCurrentStep: (step: number) => void; 
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+    projectId: string;
 }
 
-const TestContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
+const TestContract: React.FC<SelectTemplateProps> = ({ setCurrentStep, projectId }) => {
   const { projects } = useProject(); 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [testInputs, setTestInputs] = useState<{ [key: string]: any }>({});
+  /* const [testInputs, setTestInputs] = useState<{ [key: string]: any }>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
@@ -62,84 +64,32 @@ const TestContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
       setIsModalOpen(false);
     }, 2000);
   };
-
+ */
   return (
-    <Card title={`Test Your Contract: ${currentProject?.name}`}>
-      <p className="mb-4">
-        Before deploying, make sure to test your contract thoroughly.
-      </p>
-
-      {Object.keys(code).map((sectionName, index) => {
-      
-        const sectionItems = (code as any)[sectionName];
-        if (!Array.isArray(sectionItems)) {
-          return null;
-        }
-
-        return (
-          <div key={index} className="mb-8 p-4 border rounded-md shadow-md bg-white">
-            <h2 className="text-2xl font-bold mb-4 capitalize text-center bg-gray-100 p-3">{sectionName}</h2>
-
-            <div className="grid grid-cols-2 gap-8">
-              {sectionItems.map((item: any, idx: number) => (
-                <div key={idx} className="mb-6 border-b pb-4">
-                  <h3 className="text-lg font-semibold mb-2">{item.name}</h3>
-                  <div className="mb-2">
-                    {item.args && item.args.length > 0 ? (
-                      item.args.map((arg: any, argIdx: number) => (
-                        <div key={argIdx} className="mb-2">
-                          <label className="block font-medium mb-1">
-                            {arg.name}:
-                          </label>
-                          <input
-                            type="text"
-                            className="border p-2 w-full rounded bg-gray-100"
-                            placeholder={`Enter value for ${arg.name}`}
-                            value={testInputs[sectionName]?.[item.name]?.[arg.name] || ""}
-                            onChange={(e) =>
-                              handleInputChange(
-                                sectionName as keyof CodeType,
-                                item.name,
-                                arg.name,
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-gray-600">No parameters required.</p>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => handleRunTest(sectionName as keyof CodeType, item.name)}
-                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                  >
-                    Run {item.name}
-                  </button>
-                </div>
-              ))}
-            </div>
+    
+    <Card title="">
+      <div className="flex flex-col items-center">
+        <h2 className="text-2xl font-semibold mb-4">Test Contract</h2>
+        <p className="text-gray-500 text-center mb-6">
+          Test your contract by running different scenarios.
+        </p>
+        <div className="w-full max-w-4xl">
+          <div className="flex justify-center">
+            <button
+              onClick={() => setCurrentStep(2)}
+              className="px-6 py-3 bg-blue-500 text-white rounded-lg font-semibold"
+            >
+              Back
+            </button>
+            <button
+              onClick={() => setCurrentStep(4)}
+              className="px-6 py-3 bg-blue-500 text-white rounded-lg font-semibold ml-4"
+            >
+              Next
+            </button>
           </div>
-        );
-      })}
-
-      <button
-        onClick={() => console.log("Running all tests...")}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-6"
-      >
-        Run All Tests
-      </button>
-
-     
-
-      
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Test Running">
-        <p>{modalMessage}</p>
-      </Modal>
-      <button onClick={handleSaveAndProceed} className="bg-primary text-right text-white px-4 py-2 rounded-md mt-6">
-          Save and Proceed to Test
-        </button>
+        </div>
+      </div>
     </Card>
   );
 };

@@ -32,38 +32,81 @@ Solana's Anchor framework is used for building smart contracts. When creating a 
 ```
 dappify/
 │
-├── public/                     # Static assets
+├── public/                         # Static assets
 │   ├── images/
 │   ├── icons/
 │   └── fonts/
 │
 ├── src/
-│   ├── app/                    # Next.js app directory with pages and layouts
-│   │   ├── layout.tsx          # Main Layout, used for all pages
-│   │   ├── page.tsx            # Home page of the app
-│   │   ├── dashboard/          # Dashboard-specific pages and layout
+│   ├── app/                        # Next.js app directory with pages and layouts
+│   │   ├── layout.tsx              # Main Layout, used for all pages
+│   │   ├── page.tsx                # Home page of the app
+│   │   ├── dashboard/              # Dashboard page and layout where users create projects
 │   │   │   ├── page.tsx
 │   │   │   └── layout.tsx
-│   │   ├── contract/           # Contract-related pages and layout
-│   │   │   ├── page.tsx
-│   │   │   └── layout.tsx
-│   │
-│   ├── components/             # Reusable components for the application
-│   │   ├── common/             # General-purpose components (e.g., Button, Modal)
-│   │   ├── layout/             # Layout components (Topbar, Sidebar, etc.)
-│   │   ├── dashboard/          # Dashboard-specific components
+│   │   └── contract/               # Contract-related pages and layout
+│   │       ├── page.tsx
+│   │       └── layout.tsx
+│   │   
+│   ├── components/                 # Reusable components for the application
+│   │   ├── common/                 # General-purpose components (e.g., Button, Modal)
+│   │   ├── layout/                 # Layout components (Topbar, Sidebar, etc.)
+│   │   │   ├── RightAssistant.tsx 
+│   │   │   ├── Sidebar.tsx 
+│   │   │   └── Topbar.tsx 
+│   │   ├── dashboard/              # Dashboard component where users create projects
 │   │   │   └── DashboardLayout.tsx
-│   │   └── modals/             # Modal components for specific actions
+│   │   ├── contracts
+│   │   │   ├── CodeEditor.tsx      # Editor where codes are shown as rust code
+│   │   │   ├── ContractSteps.tsx   # To display components in a tab
+│   │   │   ├── DeployContract.tsx  # The section where the Contract will be deployed to the Blockchain network
+│   │   │   ├── EditContract.tsx    # The section where the Contract will be organized visually and coded.
+│   │   │   ├── PublishContract.tsx # Preparing the frontend design that will interact with the deployed contract
+│   │   │   ├── SelectTemplate.tsx  # Section for selecting a template at the beginning for contracts (Blank, Token, NFT etc.)
+│   │   │   └── TestContract.tsx    # Section where contracts will be tested
+│   │   └── modals/                 # Modal components for specific actions
 │   │       ├── DataAccountModal/
 │   │       └── InstructionModal/
+│   │           └── ContextPanel.tsx          # The section where the context accounts of the instruction are kept.
+│   │           └── FieldRow.tsx              # 
+│   │           └── InstructionAccountRow.tsx # 
+│   │           └── InstructionModal.tsx      # Main part of the instruction modal
+│   │           └── InstructionPanel.tsx      # 
+│   │           └── InstructionRow.tsx        # 
+│   │           └── ParametersPanel.tsx       # Instruction section where parameters are shown
+│   │           └── PreviewPanel.tsx          # The section where the data is displayed as rust code
+│   │           └── SettingsPanel.tsx         # Instruction General Settings section
+│   │           └── Tabs.tsx                  # Section where tabs are kept
 │   │
-│   ├── context/                # React Context API files for state management
-│   ├── data/                   # Static data for menus, templates, etc.
-│   ├── styles/                 # Global styles (CSS)
-│   ├── utils/                  # Helper functions and utilities
-│   ├── hooks/                  # Custom hooks (e.g., useContract, useWallet)
+│   ├── context/                              # React Context API files for state management
+│   │   ├── Project/
+│   │   │   ├── ProjectContext.tsx
+│   │   │   └── useProjectStore.tsx
+│   │   ├── WalletContext.tsx
+│   │   └── WebContainerContext.tsx
+│   ├── data/                           # Static data for menus, templates, etc.
+│   │   ├── menuData.ts                 # The section where the component insertion menu in EditContract is kept
+│   │   ├── stepsData.ts                # The section where the steps on the Contract page are kept
+│   │   └── templateData.ts             # The section where the templates in the SelectTemplate section are kept
+│   ├── styles/                         # Global styles (CSS)
+│   │   ├── global.css
+│   │   └── WhiteBoardCard.css
+│   ├── templates/ 
+│   │   └── anchorTemplate.ts           # Template to be used when writing contracts to context 
+│   ├── types/ 
+│   │   └── types.ts                    # Types kept when writing data to the context
+│   ├── utils/                          # Helper functions and utilities
+│   │   ├── anchorToJson.js             # Anchor to Json conversion tool
+│   │   ├── api.ts
+│   │   ├── constant.ts
+│   │   ├── helper.ts
+│   │   └── jsonToAnchor.js             # Json to Anchor conversion tool
+│   └── hooks/                          # Custom hooks (e.g., useContract, useWallet)
+│       ├── useModal.ts                 # Hook to call Modal
+│       ├── useProject.ts               # Hook to call Project Context
+│       └── useWallet.ts                # Hook to call Wallet Information
 │
-└── next.config.js              # Next.js configuration file
+└── next.config.js                      # Next.js configuration file
 
 ```
 

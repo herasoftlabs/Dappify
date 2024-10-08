@@ -1,45 +1,44 @@
 import React from "react";
 import ParameterRow from "./ParameterRow";
-
-interface Parameter {
-  id: number;
-  paramName: string;
-  accountName: string;
-}
+import { Parameter } from "@/types/types";
 
 interface ParametersPanelProps {
   parameters: Parameter[];
-  setParameters: (params: Parameter[]) => void;
+  onChange: (updatedParameters: Parameter[]) => void;
 }
 
-const ParametersPanel: React.FC<ParametersPanelProps> = ({ parameters, setParameters }) => {
-  const addParameter = () => {
-    setParameters([...parameters, { id: Date.now(), paramName: "", accountName: "" }]);
+const ParametersPanel: React.FC<ParametersPanelProps> = ({ parameters, onChange }) => {
+  const handleFieldChange = (index: number, key: keyof Parameter, value: any) => {
+    const updatedParameters = [...parameters];
+    updatedParameters[index] = { ...updatedParameters[index], [key]: value };
+    onChange(updatedParameters);
   };
 
-  const handleParameterChange = (id: number, key: keyof Parameter, value: string) => {
-    setParameters(
-      parameters.map((param) =>
-        param.id === id ? { ...param, [key]: value } : param
-      )
-    );
+  const handleDeleteParameter = (index: number) => {
+    const updatedParameters = parameters.filter((_, i) => i !== index);
+    onChange(updatedParameters);
   };
 
   return (
     <div>
-      <button onClick={addParameter} className="bg-blue text-white px-4 py-2 rounded">
+       <button
+        onClick={() =>
+          onChange([...parameters, { name: "", type: "", description: "" }])}
+        className="bg-primary text-white px-4 py-2 rounded mt-2  mb-2"
+      >
         Add Parameter
       </button>
-      <div className="max-h-[250px] overflow-y-auto pb-1 pr-1 mt-4">
-        {parameters.map((param) => (
-          <ParameterRow
-            key={param.id}
-            param={param}
-            onDelete={() => setParameters(parameters.filter((p) => p.id !== param.id))}
-            onChange={handleParameterChange}
-          />
-        ))}
-      </div>
+      <hr />
+
+      {parameters.map((param, index) => (
+        <ParameterRow
+          key={index}
+          param={param}
+          onDelete={() => handleDeleteParameter(index)}
+          onChange={(key, value) => handleFieldChange(index, key, value)}
+        />
+      ))}
+     
     </div>
   );
 };

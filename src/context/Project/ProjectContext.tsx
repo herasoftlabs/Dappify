@@ -1,48 +1,44 @@
 "use client";
 import React, { createContext, ReactNode, useContext } from 'react';
 import useProjectStore from './useProjectStore';
+import { Program, Instruction } from '@/types/types';
 
-// Context değerlerinin tipini tanımlıyoruz
 interface ProjectContextType {
-  projects: Project[];
-  addProject: (project: Project) => void;
-  updateProjectContracts: (id: string, contracts: Contract[]) => void;
+  currentVersion: Program | null;
+  versions: Program[];
+  addProgramVersion: (projectId: string, program: Program) => void; 
+  updateCurrentVersion: (update: Partial<Program>) => void;
+  rollbackVersion: (versionId: string) => void;
 }
+
 
 interface ProjectContextProps {
   children: ReactNode;
 }
 
-
-interface Contract {
-  name: string;
-  code: string;
-}
-
-interface Project {
-  id: string;
-  name: string;
-  createdAt: string;
-  folderName: string;
-  contracts: Contract[];
-  template: string;
-}
-
-
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
 export const ProjectProvider: React.FC<ProjectContextProps> = ({ children }) => {
-  const projects = useProjectStore((state) => state.projects);
-  const addProject = useProjectStore((state) => state.addProject);
-  const updateProjectContracts = useProjectStore((state) => state.updateProjectContracts);
+  const currentVersion = useProjectStore((state) => state.currentVersion);
+  const versions = useProjectStore((state) => state.versions);
+  const addProgramVersion = useProjectStore((state) => state.addProgramVersion);
+  const updateCurrentVersion = useProjectStore((state) => state.updateCurrentVersion);
+  const rollbackVersion = useProjectStore((state) => state.rollbackVersion);
 
   return (
-    <ProjectContext.Provider value={{ projects, addProject, updateProjectContracts }}>
+    <ProjectContext.Provider
+    value={{
+      currentVersion,
+      versions,
+      addProgramVersion,
+      updateCurrentVersion,
+      rollbackVersion,
+    }}
+    >
       {children}
     </ProjectContext.Provider>
   );
 };
-
 
 export const useProjectContext = () => {
   const context = useContext(ProjectContext);

@@ -1,12 +1,14 @@
+"use client";
 import React, { useState } from "react";
 import Card from "@/components/common/Card";
 import useProject from "@/hooks/useProject";
 
 interface SelectTemplateProps {
-  setCurrentStep: (step: number) => void; 
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  projectId: string;
 }
 
-const DeployContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
+const DeployContract: React.FC<SelectTemplateProps> = ({ setCurrentStep, projectId }) => {
   const { projects } = useProject(); 
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [network, setNetwork] = useState("devnet");
@@ -40,7 +42,7 @@ const DeployContract: React.FC<SelectTemplateProps> = ({ setCurrentStep }) => {
       setIsDeployed(true);
       setLogs((prevLogs) => [...prevLogs, "Contract deployed successfully!"]);
     } catch (error) {
-      console.error("Deployment error:", error);
+     /*  console.error("Deployment error:", error); */
       setLogs((prevLogs) => [...prevLogs, "Failed to deploy the contract."]);
       alert("Failed to deploy the contract.");
     } finally {
